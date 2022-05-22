@@ -1,6 +1,13 @@
 package com.revature.fantasyAdventureStore.ui;
 
+import com.revature.fantasyAdventureStore.models.AdventurerName;
+import com.revature.fantasyAdventureStore.services.UserService;
+import com.revature.fantasyAdventureStore.util.annotations.Inject;
+import com.revature.fantasyAdventureStore.util.customExceptions.InvalidUserException;
+import com.sun.source.tree.WhileLoopTree;
+
 import java.util.Scanner;
+import java.util.UUID;
 
 /*
                         /\
@@ -51,6 +58,13 @@ import java.util.Scanner;
 
 public class StartMenu extends IMenu{
 
+    @Inject
+    private final UserService userService;
+
+    @Inject
+    public StartMenu(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public void start() {
@@ -94,16 +108,17 @@ public class StartMenu extends IMenu{
 
     private void signup() {
         // Signup function:
-        // Enter a username and a password. Make sure they are not already taken and
-        // make sure they meet the requirments for the username and password.
-        String username;
+        // Enter a advName and a password. Make sure they are not already taken and
+        // make sure they meet the requirments for the advName and password.
+        String advName;
         String password;
         Scanner scan = new Scanner(System.in);
 
-        completeSignup: {
+        completeSignup:
+        {
             // Loop Through Sign-up until successful account creation
-            // Ask the user for a username
-            // Check to make sure the username is a valid username and has not been taken
+            // Ask the user for a advName
+            // Check to make sure the advName is a valid advName and has not been taken
             // (Don't know how to do that last part yet)
             //
             // Ask the user for a Password
@@ -113,16 +128,77 @@ public class StartMenu extends IMenu{
             //
             //
             while (true) {
-                //Ask the user to create a username
-                System.out.print("\nUsername: ");
-                username = scan.nextLine();
+                //Ask the user to create an Adventurer Name
+                System.out.print("\nAdventurer Name: ");
+                advName = scan.nextLine();
 
-                //
-
-
-
-
+                //Checks validity of the AdvName and makes sure it isn't already taken
+                try {
+                    if (userService.isValidAdvName(advName)) {
+                        //Check if duplicate Adv Name
+                        break;
+                    }
+                } catch (InvalidUserException e) {
+                    System.out.println(e.getMessage());
+                }
             }
+
+            //Asking and Checking the Password
+            while (true) {
+                System.out.println("\nPassword: ");
+                password = scan.nextLine();
+
+                try {
+                    if (userService.isValidPassword(password)) {
+                        /* Asking user to enter in password again. */
+                        System.out.print("\nRe enter password again: ");
+                        String confirm = scan.nextLine();
+
+                        /* If the two password equals each other, break. Else re-enter password. */
+                        if (password.equals(confirm)) break;
+                        else System.out.println("Password does not match :(");
+                    }
+                } catch (InvalidUserException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+
+            confirmExit:
+            {
+                while (true) {
+                    /* Asking user to confirm username and password. */
+                    System.out.println("\nPlease confirm your credentials (y/n)");
+                    System.out.println("\nUsername: " + advName);
+                    System.out.println("Password: " + password);
+
+                    System.out.print("\nEnter: ");
+                    String input = scan.nextLine();
+
+                    /* Switch statement for user input. Basically yes or no. */
+                    switch (input) {
+                        case "y":
+                            /* If yes, we instantiate a User object to store all the information into it. */
+                            AdventurerName adv = new AdventurerName(UUID.randomUUID().toString(), advName, password, "DEFAULT");
+
+                            //ONCE THE DATA BASE IS SET UP
+                            //UserService.register(adv);
+
+                            /* Calling the anonymous class MainMenu.start() to navigate to the main menu screen. */
+                            /* We are also passing in a user object, so we know who is logged in. */
+                            new MainMenu(adv).start();
+
+                            /* Break out of the entire loop. */
+                            break completeSignup;
+                        case "n":
+                            /* Re-enter in credentials again. */
+                            break confirmExit;
+                        default:
+                            System.out.println("Invalid Input.");
+                            break;
+                    }
+                }
+            }
+
         }
     }
 

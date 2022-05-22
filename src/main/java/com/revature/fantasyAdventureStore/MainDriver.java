@@ -1,5 +1,6 @@
 package com.revature.fantasyAdventureStore;
 
+import com.revature.fantasyAdventureStore.services.UserService;
 import com.revature.fantasyAdventureStore.ui.StartMenu;
 
 public class MainDriver {
@@ -9,7 +10,7 @@ public class MainDriver {
         // an account, login into an already existing account, or exit from the store.
 
 
-        new StartMenu().start();
+        new StartMenu(new UserService()).start();
     }
 
 }
