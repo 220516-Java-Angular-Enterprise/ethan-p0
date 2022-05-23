@@ -6,7 +6,9 @@ public class AdventurerName {
     private String id;
     private String advName;
     private String password;
-    private String role;
+    private String role; //Adventurer, Admin
+    private String advRole; // Warrior, Rogue, Mage, etc.
+    // The advRole will be used to querry the shop results to match what type of adventure they are.
 
     //Constructors:
     public AdventurerName() { super(); }

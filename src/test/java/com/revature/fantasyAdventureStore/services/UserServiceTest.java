@@ -1,6 +1,7 @@
 package com.revature.fantasyAdventureStore.services;
 
 import org.junit.jupiter.api.Test;
+import com.revature.fantasyAdventureStore.util.customExceptions.InvalidUserException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,10 +12,10 @@ class UserServiceTest {
     @Test
     void isValidAdvName() {
         assertEquals(true, usr.isValidAdvName("RoyalShield"));
-        assertEquals(false, usr.isValidAdvName("Royal:Shield"));
+        assertThrows( InvalidUserException.class, () -> {usr.isValidAdvName("Royal:Shield"); });
         assertEquals(true, usr.isValidAdvName("alecGuarino123"));
-        assertEquals(false, usr.isValidAdvName("Bob"));
-        assertEquals(false, usr.isValidAdvName("Supercalifragilisticexpialidocious"));
+        assertThrows( InvalidUserException.class, () -> {usr.isValidAdvName("Bob"); });
+        assertThrows( InvalidUserException.class, () -> {usr.isValidAdvName("Supercalifragilisticexpialidocious"); });
         assertEquals(true, usr.isValidAdvName("RoyalShield.9"));
     }
 
@@ -22,9 +23,9 @@ class UserServiceTest {
     void isValidPassword() {
         assertEquals(true, usr.isValidPassword("P@ssw0rd"));
         assertEquals(true, usr.isValidPassword("R0y@alShield"));
-        assertEquals(false, usr.isValidPassword("hello"));
-        assertEquals(false, usr.isValidPassword("password"));
-        assertEquals(false, usr.isValidPassword("P@ssword"));
-        assertEquals(false, usr.isValidPassword("Passw0rd"));
+        assertThrows( InvalidUserException.class, () -> {usr.isValidPassword("hello"); });
+        assertThrows( InvalidUserException.class, () -> {usr.isValidPassword("password"); });
+        assertThrows( InvalidUserException.class, () -> {usr.isValidPassword("P@ssword"); });
+        assertThrows( InvalidUserException.class, () -> {usr.isValidPassword("Passw0rd"); });
     }
 }
