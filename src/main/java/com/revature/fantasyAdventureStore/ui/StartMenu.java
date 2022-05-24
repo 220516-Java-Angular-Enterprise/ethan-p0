@@ -1,87 +1,58 @@
 package com.revature.fantasyAdventureStore.ui;
 
-import com.revature.fantasyAdventureStore.models.AdventurerName;
+import com.revature.fantasyAdventureStore.models.Adventurer;
 import com.revature.fantasyAdventureStore.services.UserService;
 import com.revature.fantasyAdventureStore.util.annotations.Inject;
 import com.revature.fantasyAdventureStore.util.customExceptions.InvalidUserException;
-import com.sun.source.tree.WhileLoopTree;
 
 import java.util.Scanner;
 import java.util.UUID;
 
-/*
-                        /\
-                        ||
-                        ||
-                        ||
-                        ||                                               ~-----~
-                        ||                                            /===--  ---~~~
-                        ||                   ;'                 /==~- --   -    ---~~~
-                        ||                (/ ('              /=----         ~~_  --(  '
-                        ||             ' / ;'             /=----               \__~
-     '                ~==_=~          '('             ~-~~      ~~~~        ~~~--\~'
-     \\                (c_\_        .i.             /~--    ~~~--   -~     (     '
-      `\               (}| /       / : \           / ~~------~     ~~\   (
-      \ '               ||/ \      |===|          /~/             ~~~ \ \(
-      ``~\              ~~\  )~.~_ >._.< _~-~     |`_          ~~-~     )\
-       '-~                 {  /  ) \___/ (   \   |` ` _       ~~         '
-       \ -~\                -<__/  -   -  L~ -;   \\    \ _ _/
-       `` ~~=\                  {    :    }\ ,\    ||   _ :(
-        \  ~~=\__                \ _/ \_ /  )  } _//   ( `|'
-        ``    , ~\--~=\           \     /  / _/ / '    (   '
-         \`    } ~ ~~ -~=\   _~_  / \ / \ )^ ( // :_  / '
-         |    ,          _~-'   '~~__-_  / - |/     \ (
-          \  ,_--_     _/              \_'---', -~ .   \
-           )/      /\ / /\   ,~,         \__ _}     \_  "~_
-           ,      { ( _ )'} ~ - \_    ~\  (-:-)       "\   ~
-                  /'' ''  )~ \~_ ~\   )->  \ :|    _,       "
-                 (\  _/)''} | \~_ ~  /~(   | :)   /          }
-                <``  >;,,/  )= \~__ {{{ '  \ =(  ,   ,       ;
-               {o_o }_/     |v  '~__  _    )-v|  "  :       ,"
-               {/"\_)       {_/'  \~__ ~\_ \\_} '  {        /~\
-               ,/!          '_/    '~__ _-~ \_' :  '      ,"  ~
-              (''`                  /,'~___~    | /     ,"  \ ~'
-             '/, )                 (-)  '~____~";     ,"     , }
-           /,')                    / \         /  ,~-"       '~'
-       (  ''/                     / ( '       /  /          '~'
-    ~ ~  ,, /) ,                 (/( \)      ( -)          /~'
-  (  ~~ )`  ~}                   '  \)'     _/ /           ~'
- { |) /`,--.(  }'                    '     (  /          /~'
-(` ~ ( c|~~| `}   )                        '/:\         ,'
- ~ )/``) )) '|),                          (/ | \)
-  (` (-~(( `~`'  )                        ' (/ '
-   `~'    )'`')                              '
-     ` ``
-
- */
-
-
 public class StartMenu extends IMenu{
-
     @Inject
     private final UserService userService;
-
     @Inject
     public StartMenu(UserService userService) {
         this.userService = userService;
     }
 
+    /*
+        First Function Called when you start up the Program.
+
+        Displays some ASCII art and some flavor text for when the store opens.
+        It then prompts the user to find out if they want to login/signup/ or exit.
+     */
     @Override
     public void start() {
+
         // User Input:
         Scanner scan = new Scanner(System.in);
 
+        // Display the Dragon Artwork
         displayASCIIArt();
+
+        // Display the Store Opening Text
         displayStartMessage();
 
+        /*
+            If it exists this break point then the user is leaving the Adventurer Store
+            Will continue to loop through the start menu until either the user enters some
+            valid input and moves on to a new menu, or they exit the program.
+        */
         exit_store: {
-            //Loops through the start menu until the user chooses to exit from the program.
             while (true) {
+
+                /*
+                    Display the Start Menu Text:
+                     [1] Login
+                     [2] Signup
+                     [3] Exit
+                 */
                 displayLoginMessage();
+
 
                 System.out.print("\nEnter: ");
                 String input = scan.nextLine();
-
                 switch(input) {
                     case "1":
                         // Go to the login method
@@ -92,6 +63,7 @@ public class StartMenu extends IMenu{
                         signup();
                         break;
                     case "3":
+                        //Exits the Store
                         System.out.println("Good Luck Adventurer!");
                         break exit_store;
                     default:
@@ -103,31 +75,62 @@ public class StartMenu extends IMenu{
     }
 
     private void login() {
+        /*
+            Login function:
+            Enter an advName and a password. Checks the Database to see if the
+            Adventurer account actually exists
+        */
+        String advName, password;
+        Adventurer adv = new Adventurer();
+        Scanner scan = new Scanner(System.in);
 
+        /*
+            Loops through the Login Process until the user successfully logs into their account
+            Checks if the AdvName/password combo exists within the database
+            If the new Adventurer exists in the DB then it checks the usrRole to see if it's an ADMIN
+         */
+
+        while (true) {
+
+            //Ask the input an Adventurer Name and password
+            System.out.println("\nLogging in...");
+            System.out.print("\nAdventurer Name: ");
+            advName = scan.nextLine();
+            System.out.println("\nPassword: ");
+            password = scan.nextLine();
+
+            try {
+                adv = userService.login(advName, password);
+
+                if (adv.getUsrRole().equals("ADMIN")) new AdminMenu().start();
+                else new MainMenu(adv).start();
+                break;
+            } catch (InvalidUserException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     private void signup() {
-        // Signup function:
-        // Enter a advName and a password. Make sure they are not already taken and
-        // make sure they meet the requirments for the advName and password.
-        String advName;
-        String password;
+
+        /*
+            Signup function:
+            Enter a advName and a password. Make sure they are not already taken and
+            make sure they meet the requirements for the advName and password.
+        */
+        String advName, password;
         Scanner scan = new Scanner(System.in);
 
+        /*
+            Loops through the Sign-up Process until the user creates a successful account
+            Checks if the AdvName/password is valid and has not already been used.
+            Asks the user to confirm their credentials
+            If the new Adventurer is validated then the user will be sent to the Main Menu
+         */
         completeSignup:
         {
-            // Loop Through Sign-up until successful account creation
-            // Ask the user for a advName
-            // Check to make sure the advName is a valid advName and has not been taken
-            // (Don't know how to do that last part yet)
-            //
-            // Ask the user for a Password
-            // Repeat above steps
-            //
-            // Ask user to confirm account credentials
-            //
-            //
             while (true) {
+
                 //Ask the user to create an Adventurer Name
                 System.out.print("\nAdventurer Name: ");
                 advName = scan.nextLine();
@@ -135,8 +138,7 @@ public class StartMenu extends IMenu{
                 //Checks validity of the AdvName and makes sure it isn't already taken
                 try {
                     if (userService.isValidAdvName(advName)) {
-                        //Check if duplicate Adv Name
-                        break;
+                        if (userService.isNotDuplicateUsername(advName)) break;
                     }
                 } catch (InvalidUserException e) {
                     System.out.println(e.getMessage());
@@ -178,10 +180,8 @@ public class StartMenu extends IMenu{
                     switch (input) {
                         case "y":
                             /* If yes, we instantiate a User object to store all the information into it. */
-                            AdventurerName adv = new AdventurerName(UUID.randomUUID().toString(), advName, password, "DEFAULT");
-
-                            //ONCE THE DATA BASE IS SET UP
-                            //UserService.register(adv);
+                            Adventurer adv = new Adventurer(UUID.randomUUID().toString(), advName, password, "DEFAULT","DEFAULT");
+                            userService.register(adv);
 
                             /* Calling the anonymous class MainMenu.start() to navigate to the main menu screen. */
                             /* We are also passing in a user object, so we know who is logged in. */

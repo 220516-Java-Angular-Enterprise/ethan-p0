@@ -3,18 +3,16 @@ package com.revature.fantasyAdventureStore.ui;
 import com.revature.fantasyAdventureStore.models.Adventurer;
 import com.revature.fantasyAdventureStore.util.annotations.Inject;
 
-public class MainMenu extends IMenu{
+public class AdminMenu extends IMenu{
+
+    //@Inject
+    //private final Adventurer adv;
 
     @Inject
-    private final Adventurer adv;
-
-    @Inject
-    public MainMenu(Adventurer adv) {
-        this.adv = adv;
-    }
+    public AdminMenu() { }
 
     @Override
     public void start() {
-        System.out.println("\nWelcome to the main menu " + adv.getAdvName());
+        System.out.println("\nWelcome to the ADMIN Menu");
     }
 }

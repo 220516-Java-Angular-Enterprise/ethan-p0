@@ -1,13 +1,24 @@
 package com.revature.fantasyAdventureStore.services;
 
+import com.revature.fantasyAdventureStore.daos.AdvDAO;
 import org.junit.jupiter.api.Test;
 import com.revature.fantasyAdventureStore.util.customExceptions.InvalidUserException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest {
+    UserService usr = new UserService(new AdvDAO());
 
-    UserService usr = new UserService();
+    /*
+        UserServiceTest:
+
+        This test file is used to confirm the validation of the username and password functions.
+        It checks to make sure the Regex for both the advName and password work correctly.
+
+        Because the UserService will only throw an exception if it's not valid then we have to use
+        and assertThrows instead of assertEquals.
+     */
+
 
     @Test
     void isValidAdvName() {
