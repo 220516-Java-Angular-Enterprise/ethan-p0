@@ -1,7 +1,6 @@
 package com.revature.fantasyAdventureStore.daos;
 
-import com.revature.fantasyAdventureStore.models.Adventurer;
-import com.revature.fantasyAdventureStore.models.Store;
+import com.revature.fantasyAdventureStore.models.StoreItemJunc;
 import com.revature.fantasyAdventureStore.util.database.DatabaseConnection;
 
 import java.sql.Connection;
@@ -9,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-public class StoreDAO implements CrudDAO<Store>{
+public class StoreItemJuncDAO implements CrudDAO<StoreItemJunc>{
 
     // Establishes Database Connection
     Connection con = DatabaseConnection.getCon();
@@ -20,19 +19,18 @@ public class StoreDAO implements CrudDAO<Store>{
      */
 
     @Override
-    public void save(Store store) {
+    public void save(StoreItemJunc storeItem) {
         try {
-            PreparedStatement ps = con.prepareStatement("INSERT INTO stores (id, storename, storetype) VALUES (?, ?, ?)");
-            ps.setString(1, store.getId());
-            ps.setString(2, store.getStoreName());
-            ps.setString(3, store.getStoreType());
+            PreparedStatement ps = con.prepareStatement("INSERT INTO stores_items_junc (store_id, item_id) VALUES (?, ?)");
+            ps.setString(1, storeItem.getStore_id());
+            ps.setString(2, storeItem.getItem_id());
         } catch (SQLException e) {
-            throw new RuntimeException("An Error occurred when trying to save a Store to the database.");
+            throw new RuntimeException("An Error occurred when trying to save a Store Item Junction to the database.");
         }
     }
 
     @Override
-    public void update(Store obj) {
+    public void update(StoreItemJunc obj) {
 
     }
 
@@ -42,12 +40,12 @@ public class StoreDAO implements CrudDAO<Store>{
     }
 
     @Override
-    public Store getById(String id) {
+    public StoreItemJunc getById(String id) {
         return null;
     }
 
     @Override
-    public List<Store> getAll() {
+    public List<StoreItemJunc> getAll() {
         return null;
     }
 }

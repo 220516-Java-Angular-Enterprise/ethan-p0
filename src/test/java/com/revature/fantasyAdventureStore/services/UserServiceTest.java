@@ -39,4 +39,17 @@ class UserServiceTest {
         assertThrows( InvalidUserException.class, () -> {usr.isValidPassword("P@ssword"); });
         assertThrows( InvalidUserException.class, () -> {usr.isValidPassword("Passw0rd"); });
     }
+
+    @Test
+    void isNotDuplicateUsername() {
+
+    }
+
+    @Test
+    void login() {
+    }
+
+    @Test
+    void register() {
+    }
 }

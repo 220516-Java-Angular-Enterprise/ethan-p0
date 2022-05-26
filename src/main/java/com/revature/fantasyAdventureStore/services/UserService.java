@@ -29,7 +29,7 @@ public class UserService {
         List<Adventurer> advs = AdvDAO.getAll();
 
         for (Adventurer u : advs) {
-            if (u.getAdvName().equals(adv)) {
+            if (u.getAdvName().equals(advName)) {
                 adv.setId(u.getId());
                 adv.setAdvName(u.getAdvName());
                 adv.setAdvRole(u.getAdvRole());
@@ -41,7 +41,6 @@ public class UserService {
             }
             if (u.getPassword().equals(password)) {
                 adv.setPassword(u.getPassword());
-                break;
             }
         }
 

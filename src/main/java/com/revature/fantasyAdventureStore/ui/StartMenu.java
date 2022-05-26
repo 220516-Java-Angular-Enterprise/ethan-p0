@@ -1,5 +1,6 @@
 package com.revature.fantasyAdventureStore.ui;
 
+import com.revature.fantasyAdventureStore.daos.AdvDAO;
 import com.revature.fantasyAdventureStore.models.Adventurer;
 import com.revature.fantasyAdventureStore.services.UserService;
 import com.revature.fantasyAdventureStore.util.annotations.Inject;
@@ -96,13 +97,13 @@ public class StartMenu extends IMenu{
             System.out.println("\nLogging in...");
             System.out.print("\nAdventurer Name: ");
             advName = scan.nextLine();
-            System.out.println("\nPassword: ");
+            System.out.print("\nPassword: ");
             password = scan.nextLine();
 
             try {
                 adv = userService.login(advName, password);
 
-                if (adv.getUsrRole().equals("ADMIN")) new AdminMenu().start();
+                if (adv.getUsrRole().equals("ADMIN")) new AdminMenu(adv, new UserService(new AdvDAO())).start();
                 else new MainMenu(adv).start();
                 break;
             } catch (InvalidUserException e) {
@@ -147,7 +148,7 @@ public class StartMenu extends IMenu{
 
             //Asking and Checking the Password
             while (true) {
-                System.out.println("\nPassword: ");
+                System.out.print("\nPassword: ");
                 password = scan.nextLine();
 
                 try {

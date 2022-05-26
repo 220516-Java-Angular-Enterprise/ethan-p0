@@ -32,7 +32,7 @@ public class AdvDAO implements CrudDAO<Adventurer> {
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException("An Error occurred when trying to save to the database.");
+            throw new RuntimeException("An Error occurred when trying to save an Adventurer to the database.");
         }
     }
 
@@ -61,7 +61,7 @@ public class AdvDAO implements CrudDAO<Adventurer> {
         List<Adventurer> advs = new ArrayList<>();
 
         try {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM users");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM adventurers");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
