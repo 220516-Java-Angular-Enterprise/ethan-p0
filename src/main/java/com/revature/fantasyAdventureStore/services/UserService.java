@@ -2,6 +2,7 @@ package com.revature.fantasyAdventureStore.services;
 
 import com.revature.fantasyAdventureStore.daos.AdvDAO;
 import com.revature.fantasyAdventureStore.models.Adventurer;
+import com.revature.fantasyAdventureStore.models.Store;
 import com.revature.fantasyAdventureStore.util.annotations.Inject;
 import com.revature.fantasyAdventureStore.util.customExceptions.InvalidUserException;
 
@@ -90,5 +91,9 @@ public class UserService {
         else if (adv.getPassword() == null) throw new InvalidUserException("Incorrect password.");
 
         return adv;
+    }
+
+    public Store getStoreByStoreID (String id) {
+        return AdvDAO.getStoreByStoreID(id);
     }
 }

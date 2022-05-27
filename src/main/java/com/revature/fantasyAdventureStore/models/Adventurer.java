@@ -13,16 +13,17 @@ public class Adventurer {
         The advRole will be used to recommend different shops to the customer
         For example: A warrior may be directed to a blacksmith or a Mage to a Library/Potion Shop
      */
-    private String id, advName, password, advRole, usrRole;
+    private String id, advName, password, advRole, usrRole, store_id;
 
     //Adventurer Constructors
     public Adventurer() { super(); }
-    public Adventurer(String id, String advName, String password, String advRole, String usrRole) {
+    public Adventurer(String id, String advName, String password, String advRole, String usrRole, String store_id) {
         this.id = id;
         this.advName = advName;
         this.password = password;
         this.advRole = advRole;
         this.usrRole = usrRole;
+        this.store_id = store_id;
     }
 
     //Getters and Setters:
@@ -36,7 +37,8 @@ public class Adventurer {
     public void setAdvRole(String role) { this.advRole = role; }
     public String getUsrRole() { return usrRole; }
     public void setUsrRole(String role) { this.usrRole = role; }
-
+    public String getStore_id() { return store_id; }
+    public void setStore_id(String store_id) { this.store_id = store_id; }
 
     // No Longer in use, was used to convert our users into a new file to temporarily store data.
     //public String toFileString() { return id + ":" + advName + ":" + password + ":" + advRole + ":" + usrRole + "\n"; }
@@ -50,6 +52,7 @@ public class Adventurer {
                 ", password='" + password + '\'' +
                 ", advRole='" + advRole + '\'' +
                 ", usrRole='" + usrRole + '\'' +
+                ", store_id='" + store_id + '\'' +
                 '}';
     }
 }

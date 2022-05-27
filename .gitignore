@@ -28,4 +28,6 @@ hs_err_pid*
 
 *.iml
 
+*.properties
+
 *.DS_Store

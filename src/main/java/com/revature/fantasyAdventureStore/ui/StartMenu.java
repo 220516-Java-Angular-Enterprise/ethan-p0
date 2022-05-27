@@ -1,7 +1,11 @@
 package com.revature.fantasyAdventureStore.ui;
 
 import com.revature.fantasyAdventureStore.daos.AdvDAO;
+import com.revature.fantasyAdventureStore.daos.ItemDAO;
+import com.revature.fantasyAdventureStore.daos.StoreDAO;
 import com.revature.fantasyAdventureStore.models.Adventurer;
+import com.revature.fantasyAdventureStore.services.ItemService;
+import com.revature.fantasyAdventureStore.services.StoreService;
 import com.revature.fantasyAdventureStore.services.UserService;
 import com.revature.fantasyAdventureStore.util.annotations.Inject;
 import com.revature.fantasyAdventureStore.util.customExceptions.InvalidUserException;
@@ -104,7 +108,7 @@ public class StartMenu extends IMenu{
                 adv = userService.login(advName, password);
 
                 if (adv.getUsrRole().equals("ADMIN")) new AdminMenu(adv, new UserService(new AdvDAO())).start();
-                else new MainMenu(adv).start();
+                else new MainMenu(adv, new UserService(new AdvDAO()), new ItemService(new ItemDAO()), new StoreService(new StoreDAO())).start();
                 break;
             } catch (InvalidUserException e) {
                 System.out.println(e.getMessage());
@@ -181,12 +185,12 @@ public class StartMenu extends IMenu{
                     switch (input) {
                         case "y":
                             /* If yes, we instantiate a User object to store all the information into it. */
-                            Adventurer adv = new Adventurer(UUID.randomUUID().toString(), advName, password, "DEFAULT","DEFAULT");
+                            Adventurer adv = new Adventurer(UUID.randomUUID().toString(), advName, password, "DEFAULT","DEFAULT", "0");
                             userService.register(adv);
 
                             /* Calling the anonymous class MainMenu.start() to navigate to the main menu screen. */
                             /* We are also passing in a user object, so we know who is logged in. */
-                            new MainMenu(adv).start();
+                            new MainMenu(adv, new UserService(new AdvDAO()), new ItemService(new ItemDAO()), new StoreService(new StoreDAO())).start();;
 
                             /* Break out of the entire loop. */
                             break completeSignup;

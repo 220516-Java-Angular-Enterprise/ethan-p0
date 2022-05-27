@@ -4,9 +4,12 @@ import com.revature.fantasyAdventureStore.models.Adventurer;
 import com.revature.fantasyAdventureStore.models.Item;
 import com.revature.fantasyAdventureStore.util.database.DatabaseConnection;
 
+import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemDAO implements CrudDAO<Item> {
@@ -54,5 +57,27 @@ public class ItemDAO implements CrudDAO<Item> {
     @Override
     public List<Item> getAll() {
         return null;
+    }
+
+    public List<Item> getItemsByStoreID( String id ) {
+        List<Item> items = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM items WHERE store_id = (?)");
+            ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                items.add(new Item(rs.getString("id"), rs.getString("itemName"),
+                        rs.getString("itemType"), rs.getString("itemDesc"),
+                        rs.getInt("cost"), rs.getInt("inventory"),
+                        rs.getString("store_id")));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("An Error Occurred when trying to get Items by Store ID from the Database.");
+        }
+
+        return items;
     }
 }

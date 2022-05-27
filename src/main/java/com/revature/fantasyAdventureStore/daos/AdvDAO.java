@@ -1,6 +1,7 @@
 package com.revature.fantasyAdventureStore.daos;
 
 import com.revature.fantasyAdventureStore.models.Adventurer;
+import com.revature.fantasyAdventureStore.models.Store;
 import com.revature.fantasyAdventureStore.util.database.DatabaseConnection;
 
 import java.sql.Connection;
@@ -23,12 +24,13 @@ public class AdvDAO implements CrudDAO<Adventurer> {
     @Override
     public void save(Adventurer adv) {
         try {
-            PreparedStatement ps = con.prepareStatement("INSERT INTO adventurers (id, advName, password, advRole, usrRole) VALUES (?, ?, ?, ?, ?)");
+            PreparedStatement ps = con.prepareStatement("INSERT INTO adventurers (id, advName, password, advRole, usrRole, store_id) VALUES (?, ?, ?, ?, ?, ?)");
             ps.setString(1, adv.getId());
             ps.setString(2, adv.getAdvName());
             ps.setString(3, adv.getPassword());
             ps.setString(4, adv.getAdvRole());
             ps.setString(5, adv.getUsrRole());
+            ps.setString(6, adv.getStore_id());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -103,5 +105,20 @@ public class AdvDAO implements CrudDAO<Adventurer> {
         return advNames;
     }
 
+    public Store getStoreByStoreID(String store_id) {
+        Store store = new Store();
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM stores WHERE store_id = (?)");
+            ps.setString(1, store_id);
+            ResultSet rs = ps.executeQuery();
+            store = new Store(rs.getString("id"), rs.getString("storeName"), rs.getString("storeType"));
+
+        } catch (SQLException e) {
+            throw new RuntimeException("An Error Occurred when trying to get Store by Store ID from Adventure in the Database.");
+        }
+
+        return store;
+    }
 
 }
