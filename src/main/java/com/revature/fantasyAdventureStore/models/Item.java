@@ -27,6 +27,9 @@ public class Item {
         this.store_id = store_id;
     }
 
+    public Item() {
+
+    }
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
     public String getItemName() { return itemName; }
@@ -45,13 +48,15 @@ public class Item {
 
     @Override
     public String toString() {
-        return "Item{" +
+        return itemName + ": " + itemDesc+ ".\n" + "Cost: " + cost + " gold." + "In-Stock: " + inv + "\n";
+
+        /* return "Item{" +
                 "id='" + id + '\'' +
                 ", itemName='" + itemName + '\'' +
                 ", itemType='" + itemType + '\'' +
                 ", cost=" + cost +
                 ", inv=" + inv +
                 ", store_id='" + store_id + '\'' +
-                '}';
+                '}'; */
     }
 }

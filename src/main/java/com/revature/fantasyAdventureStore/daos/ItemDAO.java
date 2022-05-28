@@ -2,6 +2,8 @@ package com.revature.fantasyAdventureStore.daos;
 
 import com.revature.fantasyAdventureStore.models.Adventurer;
 import com.revature.fantasyAdventureStore.models.Item;
+import com.revature.fantasyAdventureStore.models.Store;
+import com.revature.fantasyAdventureStore.util.customExceptions.InvalidSQLException;
 import com.revature.fantasyAdventureStore.util.database.DatabaseConnection;
 
 import javax.xml.transform.Result;
@@ -59,11 +61,11 @@ public class ItemDAO implements CrudDAO<Item> {
         return null;
     }
 
-    public List<Item> getItemsByStoreID( String id ) {
+    public List<Item> getItemsFromStoreInStock( String id ) {
         List<Item> items = new ArrayList<>();
 
         try {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM items WHERE store_id = (?)");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM items WHERE store_id = (?) AND inventory != 0");
             ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
 
@@ -80,4 +82,37 @@ public class ItemDAO implements CrudDAO<Item> {
 
         return items;
     }
+
+    public void updateItemQuantity(int quantity, String id) {
+        try {
+            PreparedStatement ps = con.prepareStatement("UPDATE items SET inventory = ? WHERE id = ?");
+            ps.setInt(1, quantity);
+            ps.setString(2, id);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new InvalidSQLException("An Error Occurred when trying to update the Item Quantity.");
+        }
+    }
+
+    public Item getItemById(String id) {
+        Item item = new Item();
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM items WHERE id = ?");
+            ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next())
+                item = new Item(rs.getString("id"), rs.getString("itemname"),
+                        rs.getString("itemtype"), rs.getString("itemdesc"),
+                        rs.getInt("cost"), rs.getInt("inventory"),
+                        rs.getString("store_id"));
+
+        } catch (SQLException e) {
+            throw new InvalidSQLException("An Error Occurred when trying to get Item by Item ID From the Database.");
+        }
+
+        return item;
+    }
+
 }

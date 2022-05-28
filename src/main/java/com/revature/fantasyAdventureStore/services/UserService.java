@@ -35,6 +35,7 @@ public class UserService {
                 adv.setAdvName(u.getAdvName());
                 adv.setAdvRole(u.getAdvRole());
                 adv.setUsrRole(u.getUsrRole());
+                adv.setStore_id(u.getStore_id());
                 if (u.getPassword().equals(password)) {
                     adv.setPassword(u.getPassword());
                     break;
@@ -95,5 +96,47 @@ public class UserService {
 
     public Store getStoreByStoreID (String id) {
         return AdvDAO.getStoreByStoreID(id);
+    }
+
+    public boolean updateName(String name, String id) {
+        try {
+            AdvDAO.updateAdvName(name, id);
+            return true;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        } return false;
+    }
+    public boolean updatePassword(String password, String id) {
+        try {
+            AdvDAO.updatePassword(password, id);
+            return true;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        } return false;
+    }
+    public boolean updateUsrRole(String usrRole, String id) {
+        try {
+            AdvDAO.updateUsrRole(usrRole, id);
+            return true;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        } return false;
+    }
+    public boolean updateAdvRole(String advName, String id) {
+        try {
+            AdvDAO.updateAdvRole(advName, id);
+            return true;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        } return false;
+    }
+
+    public boolean deleteAdv(String id) {
+        try {
+            AdvDAO.delete(id);
+            return true;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        } return false;
     }
 }

@@ -2,6 +2,7 @@ package com.revature.fantasyAdventureStore.daos;
 
 import com.revature.fantasyAdventureStore.models.Adventurer;
 import com.revature.fantasyAdventureStore.models.Store;
+import com.revature.fantasyAdventureStore.util.customExceptions.InvalidSQLException;
 import com.revature.fantasyAdventureStore.util.database.DatabaseConnection;
 
 import java.sql.Connection;
@@ -34,18 +35,32 @@ public class AdvDAO implements CrudDAO<Adventurer> {
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException("An Error occurred when trying to save an Adventurer to the database.");
+            throw new InvalidSQLException("An Error occurred when trying to save an Adventurer to the database.");
         }
     }
 
     @Override
     public void update(Adventurer obj) {
+        try {
+            PreparedStatement ps = con.prepareStatement("DELETE FROM adventurers WHERE id = ?");
+            //ps.setString(1, id);
+            ps.executeUpdate();
 
+        } catch (SQLException e) {
+            throw new InvalidSQLException("An Error Occurred when trying to update an Adventurer.");
+        }
     }
 
     @Override
     public void delete(String id) {
+        try {
+            PreparedStatement ps = con.prepareStatement("DELETE FROM adventurers WHERE id = ?");
+            ps.setString(1, id);
+            ps.executeUpdate();
 
+        } catch (SQLException e) {
+            throw new InvalidSQLException("An Error Occurred when trying to delete an Adventurer.");
+        }
     }
 
     @Override
@@ -73,11 +88,12 @@ public class AdvDAO implements CrudDAO<Adventurer> {
                 adv.setPassword(rs.getString("password"));
                 adv.setAdvRole(rs.getString("advRole"));
                 adv.setUsrRole(rs.getString("usrRole"));
+                adv.setStore_id(rs.getString("store_id"));
 
                 advs.add(adv);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("An error occurred when tyring to get data from to the database.");
+            throw new InvalidSQLException("An error occurred when tyring to get data from to the database.");
         }
 
         return advs;
@@ -99,7 +115,7 @@ public class AdvDAO implements CrudDAO<Adventurer> {
                 advNames.add(rs.getString("advName"));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("An error occurred when tyring to get data from to the database.");
+            throw new InvalidSQLException("An error occurred when tyring to get data from to the database.");
         }
 
         return advNames;
@@ -109,16 +125,62 @@ public class AdvDAO implements CrudDAO<Adventurer> {
         Store store = new Store();
 
         try {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM stores WHERE store_id = (?)");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM stores WHERE id = ?");
             ps.setString(1, store_id);
             ResultSet rs = ps.executeQuery();
-            store = new Store(rs.getString("id"), rs.getString("storeName"), rs.getString("storeType"));
+            while (rs.next())
+                store = new Store(rs.getString("id"), rs.getString("storename"), rs.getString("storetype"));
+
 
         } catch (SQLException e) {
-            throw new RuntimeException("An Error Occurred when trying to get Store by Store ID from Adventure in the Database.");
+            throw new InvalidSQLException("An Error Occurred when trying to get Store by Store ID from Adventure in the Database.");
         }
 
         return store;
     }
 
+    public void updateAdvName(String name, String id) {
+        try {
+            PreparedStatement ps = con.prepareStatement("UPDATE adventurers SET advname = ? WHERE id = ?");
+            ps.setString(1, name);
+            ps.setString(2, id);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new InvalidSQLException("An Error Occurred when trying to update the Adventurer Name.");
+        }
+    }
+    public void updatePassword(String password, String id) {
+        try {
+            PreparedStatement ps = con.prepareStatement("UPDATE adventurers SET password = ? WHERE id = ?");
+            ps.setString(1, password);
+            ps.setString(2, id);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new InvalidSQLException("An Error Occurred when trying to update the Adventurer Password.");
+        }
+    }
+    public void updateAdvRole(String advRole, String id) {
+        try {
+            PreparedStatement ps = con.prepareStatement("UPDATE adventurers SET advrole = ? WHERE id = ?");
+            ps.setString(1, advRole);
+            ps.setString(2, id);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new InvalidSQLException("An Error Occurred when trying to update the Adventurer Role.");
+        }
+    }
+    public void updateUsrRole(String usrRole, String id) {
+        try {
+            PreparedStatement ps = con.prepareStatement("UPDATE adventurers SET usrrole = ? WHERE id = ?");
+            ps.setString(1, usrRole);
+            ps.setString(2, id);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new InvalidSQLException("An Error Occurred when trying to update the User.");
+        }
+    }
 }

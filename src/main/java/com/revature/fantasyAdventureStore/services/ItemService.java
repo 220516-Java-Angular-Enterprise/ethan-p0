@@ -12,9 +12,21 @@ public class ItemService {
 
     public ItemService(ItemDAO itemDAO) { this.itemDAO = itemDAO; }
 
-    public List<Item> getItemsByStore (String id) {
-        return itemDAO.getItemsByStoreID(id);
+    public List<Item> getItemsFromStoreInStock (String id) {
+        return itemDAO.getItemsFromStoreInStock(id);
+    }
 
+    public void updateItemQuantity(int quantity, String id) {
+        try {
+            itemDAO.updateItemQuantity(quantity, id);
+
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public Item getItemByID(String id) {
+        return itemDAO.getItemById(id);
     }
 
 }

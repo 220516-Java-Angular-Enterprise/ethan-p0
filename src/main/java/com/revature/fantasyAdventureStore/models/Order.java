@@ -14,14 +14,13 @@ public class Order {
 
     */
 
-    private String id, time, status;
+    private String id, status;
     private int quantity;
     private String item_id, adv_id;
 
 
-    public Order(String id, String time, String status, int quantity, String item_id, String adv_id) {
+    public Order(String id, String status, int quantity, String item_id, String adv_id) {
         this.id = id;
-        this.time = time;
         this.status = status;
         this.quantity = quantity;
         this.item_id = item_id;
@@ -31,8 +30,6 @@ public class Order {
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
-    public String getTime() { return time; }
-    public void setTime(String time) { this.time = time; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
     public int getQuantity() { return quantity; }
@@ -46,7 +43,6 @@ public class Order {
     public String toString() {
         return "Order{" +
                 "id='" + id + '\'' +
-                ", time='" + time + '\'' +
                 ", status='" + status + '\'' +
                 ", quantity=" + quantity +
                 ", item_id='" + item_id + '\'' +

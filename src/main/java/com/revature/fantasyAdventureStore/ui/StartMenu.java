@@ -2,9 +2,12 @@ package com.revature.fantasyAdventureStore.ui;
 
 import com.revature.fantasyAdventureStore.daos.AdvDAO;
 import com.revature.fantasyAdventureStore.daos.ItemDAO;
+import com.revature.fantasyAdventureStore.daos.OrderDAO;
 import com.revature.fantasyAdventureStore.daos.StoreDAO;
 import com.revature.fantasyAdventureStore.models.Adventurer;
+import com.revature.fantasyAdventureStore.models.Order;
 import com.revature.fantasyAdventureStore.services.ItemService;
+import com.revature.fantasyAdventureStore.services.OrderService;
 import com.revature.fantasyAdventureStore.services.StoreService;
 import com.revature.fantasyAdventureStore.services.UserService;
 import com.revature.fantasyAdventureStore.util.annotations.Inject;
@@ -67,7 +70,7 @@ public class StartMenu extends IMenu{
                         // Go to the Sign-up method
                         signup();
                         break;
-                    case "3":
+                    case "x":
                         //Exits the Store
                         System.out.println("Good Luck Adventurer!");
                         break exit_store;
@@ -108,7 +111,7 @@ public class StartMenu extends IMenu{
                 adv = userService.login(advName, password);
 
                 if (adv.getUsrRole().equals("ADMIN")) new AdminMenu(adv, new UserService(new AdvDAO())).start();
-                else new MainMenu(adv, new UserService(new AdvDAO()), new ItemService(new ItemDAO()), new StoreService(new StoreDAO())).start();
+                else new MainMenu(adv, new UserService(new AdvDAO()), new ItemService(new ItemDAO()), new StoreService(new StoreDAO()), new OrderService(new OrderDAO())).start();
                 break;
             } catch (InvalidUserException e) {
                 System.out.println(e.getMessage());
@@ -190,7 +193,7 @@ public class StartMenu extends IMenu{
 
                             /* Calling the anonymous class MainMenu.start() to navigate to the main menu screen. */
                             /* We are also passing in a user object, so we know who is logged in. */
-                            new MainMenu(adv, new UserService(new AdvDAO()), new ItemService(new ItemDAO()), new StoreService(new StoreDAO())).start();;
+                            new MainMenu(adv, new UserService(new AdvDAO()), new ItemService(new ItemDAO()), new StoreService(new StoreDAO()), new OrderService(new OrderDAO())).start();;
 
                             /* Break out of the entire loop. */
                             break completeSignup;
@@ -217,7 +220,7 @@ public class StartMenu extends IMenu{
     private void displayLoginMessage() {
         System.out.println("[1] Login");
         System.out.println("[2] Signup");
-        System.out.println("[3] Exit");
+        System.out.println("[x] Exit");
     }
 
     private void displayASCIIArt() {
