@@ -1,15 +1,9 @@
 package com.revature.fantasyAdventureStore.ui;
 
-import com.revature.fantasyAdventureStore.daos.AdvDAO;
-import com.revature.fantasyAdventureStore.daos.ItemDAO;
-import com.revature.fantasyAdventureStore.daos.OrderDAO;
-import com.revature.fantasyAdventureStore.daos.StoreDAO;
+import com.revature.fantasyAdventureStore.daos.*;
 import com.revature.fantasyAdventureStore.models.Adventurer;
 import com.revature.fantasyAdventureStore.models.Order;
-import com.revature.fantasyAdventureStore.services.ItemService;
-import com.revature.fantasyAdventureStore.services.OrderService;
-import com.revature.fantasyAdventureStore.services.StoreService;
-import com.revature.fantasyAdventureStore.services.UserService;
+import com.revature.fantasyAdventureStore.services.*;
 import com.revature.fantasyAdventureStore.util.annotations.Inject;
 import com.revature.fantasyAdventureStore.util.customExceptions.InvalidUserException;
 
@@ -49,7 +43,6 @@ public class StartMenu extends IMenu{
         */
         exit_store: {
             while (true) {
-
                 /*
                     Display the Start Menu Text:
                      [1] Login
@@ -57,10 +50,9 @@ public class StartMenu extends IMenu{
                      [3] Exit
                  */
                 displayLoginMessage();
-
-
                 System.out.print("\nEnter: ");
                 String input = scan.nextLine();
+                System.out.println("\n------------------------------------------\n");
                 switch(input) {
                     case "1":
                         // Go to the login method
@@ -106,12 +98,13 @@ public class StartMenu extends IMenu{
             advName = scan.nextLine();
             System.out.print("\nPassword: ");
             password = scan.nextLine();
+            System.out.println("\n------------------------------------------\n");
 
             try {
                 adv = userService.login(advName, password);
 
-                if (adv.getUsrRole().equals("ADMIN")) new AdminMenu(adv, new UserService(new AdvDAO())).start();
-                else new MainMenu(adv, new UserService(new AdvDAO()), new ItemService(new ItemDAO()), new StoreService(new StoreDAO()), new OrderService(new OrderDAO())).start();
+                if (adv.getUsrRole().equals("ADMIN")) new AdminMenu(adv, new UserService(new AdvDAO()), new ItemService(new ItemDAO()), new StoreService(new StoreDAO()), new OrderService(new OrderDAO()), new OrderHistoryService(new OrderHistoryDAO())).start();
+                else new MainMenu(adv, new UserService(new AdvDAO()), new ItemService(new ItemDAO()), new StoreService(new StoreDAO()), new OrderService(new OrderDAO()), new OrderHistoryService(new OrderHistoryDAO())).start();
                 break;
             } catch (InvalidUserException e) {
                 System.out.println(e.getMessage());
@@ -127,6 +120,8 @@ public class StartMenu extends IMenu{
             make sure they meet the requirements for the advName and password.
         */
         String advName, password;
+        String advClass = "";
+        String store_id = "";
         Scanner scan = new Scanner(System.in);
 
         /*
@@ -152,9 +147,60 @@ public class StartMenu extends IMenu{
                     System.out.println(e.getMessage());
                 }
             }
+            exit:
+            {
+                while (true) {
+                    // Asks the user to assign the class
+                    displayAdventurerClasses();
+                    System.out.print("\nAdventurer Class: ");
+                    String advClassInput = scan.nextLine();
+                    switch (advClassInput) {
+                        case "1":
+                            advClass = "Barbarian";
+                            break exit;
+                        case "2":
+                            advClass = "Bard";
+                            break exit;
+                        case "3":
+                            advClass = "Cleric";
+                            break exit;
+                        case "4":
+                            advClass = "Druid";
+                            break exit;
+                        case "5":
+                            advClass = "Fighter";
+                            break exit;
+                        case "6":
+                            advClass = "Monk";
+                            break exit;
+                        case "7":
+                            advClass = "Paladin";
+                            break exit;
+                        case "8":
+                            advClass = "Ranger";
+                            break exit;
+                        case "9":
+                            advClass = "Rogue";
+                            break exit;
+                        case "10":
+                            advClass = "Sorcerer";
+                            break exit;
+                        case "11":
+                            advClass = "Warlock";
+                            break exit;
+                        case "12":
+                            advClass = "Wizard";
+                            break exit;
+                        case "default":
+                            System.out.println("Enter a Valid Class Number");
+                            break;
+                    }
+                }
+            }
 
             //Asking and Checking the Password
             while (true) {
+                store_id = userService.getStoreIdFromAdvRole(advClass);
                 System.out.print("\nPassword: ");
                 password = scan.nextLine();
 
@@ -183,17 +229,18 @@ public class StartMenu extends IMenu{
 
                     System.out.print("\nEnter: ");
                     String input = scan.nextLine();
+                    System.out.println("\n------------------------------------------\n");
 
                     /* Switch statement for user input. Basically yes or no. */
                     switch (input) {
                         case "y":
                             /* If yes, we instantiate a User object to store all the information into it. */
-                            Adventurer adv = new Adventurer(UUID.randomUUID().toString(), advName, password, "DEFAULT","DEFAULT", "0");
+                            Adventurer adv = new Adventurer(UUID.randomUUID().toString(), advName, password, advClass,"DEFAULT", store_id);
                             userService.register(adv);
 
                             /* Calling the anonymous class MainMenu.start() to navigate to the main menu screen. */
                             /* We are also passing in a user object, so we know who is logged in. */
-                            new MainMenu(adv, new UserService(new AdvDAO()), new ItemService(new ItemDAO()), new StoreService(new StoreDAO()), new OrderService(new OrderDAO())).start();;
+                            new MainMenu(adv, new UserService(new AdvDAO()), new ItemService(new ItemDAO()), new StoreService(new StoreDAO()), new OrderService(new OrderDAO()), new OrderHistoryService(new OrderHistoryDAO())).start();;
 
                             /* Break out of the entire loop. */
                             break completeSignup;
@@ -208,6 +255,16 @@ public class StartMenu extends IMenu{
             }
 
         }
+    }
+
+    private void displayAdventurerClasses() {
+        System.out.println("What is your Class?");
+        System.out.println("[1] Barbarian \t\t [7] Paladin");
+        System.out.println("[2] Bard \t\t [8] Ranger");
+        System.out.println("[3] Cleric \t\t [9] Rogue");
+        System.out.println("[4] Druid \t\t [10] Sorcerer");
+        System.out.println("[5] Fighter \t\t [11] Warlock");
+        System.out.println("[6] Monk \t\t [12] Wizard");
     }
 
     private void displayStartMessage() {

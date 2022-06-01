@@ -65,7 +65,22 @@ public class AdvDAO implements CrudDAO<Adventurer> {
 
     @Override
     public Adventurer getById(String id) {
-        return null;
+        Adventurer adv = new Adventurer();
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM adventurers WHERE id = ?");
+            ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next())
+                adv = new Adventurer(rs.getString("id"), rs.getString("advname"),rs.getString("password"),rs.getString("advrole"),
+            rs.getString("usrrole"), rs.getString("store_id"));
+
+
+        } catch (SQLException e) {
+            throw new InvalidSQLException("An error occurred when tyring to get data from to the database.");
+        }
+        return adv;
     }
 
     /*
@@ -137,6 +152,23 @@ public class AdvDAO implements CrudDAO<Adventurer> {
         }
 
         return store;
+    }
+    public String getStoreIDByAdvRole(String advRole) {
+        Store store = new Store();
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM stores WHERE storetype = ?");
+            ps.setString(1, advRole);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next())
+                store = new Store(rs.getString("id"), rs.getString("storename"), rs.getString("storetype"));
+
+
+        } catch (SQLException e) {
+            throw new InvalidSQLException("An Error Occurred when trying to get Store ID by Adv Role from Adventure in the Database.");
+        }
+
+        return store.getId();
     }
 
     public void updateAdvName(String name, String id) {

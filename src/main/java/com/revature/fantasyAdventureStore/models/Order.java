@@ -27,6 +27,8 @@ public class Order {
         this.adv_id = adv_id;
     }
 
+    public Order() {}
+
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }

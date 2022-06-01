@@ -49,43 +49,39 @@ public class UserService {
         return isValidCredentials(adv);
     }
 
-    /*
-        Adds a new user to the Database
-     */
+
+    // Adds a new user to the Database
+
     public void register(Adventurer adv) {
         AdvDAO.save(adv);
     }
 
-    /*
-        Runs the AdvName through a Regex to check its complexity
-     */
+
+    // Runs the AdvName through a Regex to check its complexity
     public boolean isValidAdvName(String advName) {
         if (advName.matches("^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$")) return true;
         throw new InvalidUserException("Invalid username. Username needs to be 8-20 characters long.");
     }
 
-    /*
-        Checks through our database to see if the advName has already been taken by another Adventurer
-     */
+
+    // Checks through our database to see if the advName has already been taken by another Adventurer
     public boolean isNotDuplicateUsername(String advName) {
         List<String> advNames = AdvDAO.getAllAdvNames();
         if (advNames.contains(advName)) throw new InvalidUserException("Username is already taken :(");
         return true;
     }
 
-    /*
-        Runs the password through a Regex to check its complexity
-     */
+
+    // Runs the password through a Regex to check its complexity
     public boolean isValidPassword(String password) {
         if(password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$")) return true;
         throw new InvalidUserException("Invalid username. Username needs to be 8-20 characters long.");
     }
 
 
-    /*
-        Checks the Adventurer Object to see if both the AdvName and the Password are both valid.
-     */
-    private Adventurer isValidCredentials(Adventurer adv) {
+
+    // Checks the Adventurer Object to see if both the AdvName and the Password are both valid.
+    public Adventurer isValidCredentials(Adventurer adv) {
         if (adv.getAdvName() == null && adv.getPassword() == null)
             throw new InvalidUserException("Incorrect username and password.");
         else if (adv.getAdvName() == null) throw new InvalidUserException("Incorrect username.");
@@ -131,6 +127,8 @@ public class UserService {
         } return false;
     }
 
+
+
     public boolean deleteAdv(String id) {
         try {
             AdvDAO.delete(id);
@@ -139,4 +137,44 @@ public class UserService {
             System.out.println(e.getMessage());
         } return false;
     }
+
+
+    public String getStoreIdFromAdvRole (String advRole) {
+        String storeType = "";
+        switch (advRole) {
+            case "Barbarian":
+            case "Ranger":
+            case "Paladin":
+            case "Fighter":
+            case "Cleric":
+            case "Monk":
+                storeType = "Melee";
+                break;
+            case "Bard":
+                storeType = "Tavern";
+                break;
+            case "Druid":
+                storeType = "Alchemical";
+                break;
+            case "Rogue":
+                storeType = "Gadgets";
+                break;
+            case "Sorcerer":
+            case "Warlock":
+            case "Wizard":
+                storeType = "Magical";
+                break;
+            default:
+                storeType = "Basics";
+                break;
+        }
+        return AdvDAO.getStoreIDByAdvRole(storeType);
+    }
+    public Adventurer getAdvFromID(String id) {
+        return AdvDAO.getById(id);
+    }
+    public List<Adventurer> getAll() { return AdvDAO.getAll(); }
+
 }
+
+

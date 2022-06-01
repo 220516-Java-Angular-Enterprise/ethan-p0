@@ -48,7 +48,14 @@ public class ItemDAO implements CrudDAO<Item> {
 
     @Override
     public void delete(String id) {
+        try {
+            PreparedStatement ps = con.prepareStatement("DELETE FROM items WHERE id = ?");
+            ps.setString(1, id);
+            ps.executeUpdate();
 
+        } catch (SQLException e) {
+            throw new InvalidSQLException("An Error Occurred when trying to delete an Item.");
+        }
     }
 
     @Override
@@ -94,7 +101,49 @@ public class ItemDAO implements CrudDAO<Item> {
             throw new InvalidSQLException("An Error Occurred when trying to update the Item Quantity.");
         }
     }
+    public void updateItemCost(int cost, String id) {
+        try {
+            PreparedStatement ps = con.prepareStatement("UPDATE items SET cost = ? WHERE id = ?");
+            ps.setInt(1, cost);
+            ps.setString(2, id);
+            ps.executeUpdate();
 
+        } catch (SQLException e) {
+            throw new InvalidSQLException("An Error Occurred when trying to update the Item Cost.");
+        }
+    }
+    public void updateItemName(String name, String id) {
+        try {
+            PreparedStatement ps = con.prepareStatement("UPDATE items SET itemName = ? WHERE id = ?");
+            ps.setString(1, name);
+            ps.setString(2, id);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new InvalidSQLException("An Error Occurred when trying to update the Item Name.");
+        }
+    }
+    public void updateItemType(String type, String id) {
+        try {
+            PreparedStatement ps = con.prepareStatement("UPDATE items SET itemType = ? WHERE id = ?");
+            ps.setString(1, type);
+            ps.setString(2, id);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new InvalidSQLException("An Error Occurred when trying to update the Item Type.");        }
+    }
+    public void updateItemStore(String store_id, String id) {
+        try {
+            PreparedStatement ps = con.prepareStatement("UPDATE items SET store_id = ? WHERE id = ?");
+            ps.setString(1, store_id);
+            ps.setString(2, id);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new InvalidSQLException("An Error Occurred when trying to update the Item Quantity.");
+        }
+    }
     public Item getItemById(String id) {
         Item item = new Item();
 

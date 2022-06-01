@@ -24,4 +24,35 @@ public class OrderService {
         List<Order> orders = new ArrayList<>();
         return orderDAO.getCart(adv_id);
     }
+    public Order getOrderByID(String id) {
+        return orderDAO.getById(id);
+    }
+
+    public void updateOrderStatus(String status, String id) {
+        try {
+            orderDAO.updateOrderStatus(status, id);
+
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void updateOrderQuantity(int quantity, String id) {
+        try {
+            orderDAO.updateOrderQuantity(quantity, id);
+
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public boolean deleteOrder(String id) {
+        try {
+            orderDAO.delete(id);
+            return true;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        } return false;
+    }
+
 }

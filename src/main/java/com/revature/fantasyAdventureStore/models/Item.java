@@ -45,7 +45,6 @@ public class Item {
     public String getStore_id() { return store_id; }
     public void setStore_id(String store_id) { this.store_id = store_id; }
 
-
     @Override
     public String toString() {
         return itemName + ": " + itemDesc+ ".\n" + "Cost: " + cost + " gold." + "In-Stock: " + inv + "\n";
@@ -59,4 +58,5 @@ public class Item {
                 ", store_id='" + store_id + '\'' +
                 '}'; */
     }
+
 }

@@ -1,6 +1,7 @@
 package com.revature.fantasyAdventureStore.services;
 
 import com.revature.fantasyAdventureStore.daos.AdvDAO;
+import com.revature.fantasyAdventureStore.models.Adventurer;
 import org.junit.jupiter.api.Test;
 import com.revature.fantasyAdventureStore.util.customExceptions.InvalidUserException;
 
@@ -42,14 +43,43 @@ class UserServiceTest {
 
     @Test
     void isNotDuplicateUsername() {
+        assertEquals(true, usr.isNotDuplicateUsername("BDound9"));
+        assertThrows(InvalidUserException.class, () -> {usr.isNotDuplicateUsername("RoyalShield"); });
+    }
+
+    @Test
+    void getStoreIdFromAdvRole() {
+        assertEquals("2", usr.getStoreIdFromAdvRole("Barbarian"));
+        assertEquals("2", usr.getStoreIdFromAdvRole("Ranger"));
+        assertEquals("2", usr.getStoreIdFromAdvRole("Paladin"));
+        assertEquals("2", usr.getStoreIdFromAdvRole("Fighter"));
+        assertEquals("2", usr.getStoreIdFromAdvRole("Cleric"));
+        assertEquals("2", usr.getStoreIdFromAdvRole("Monk"));
+
+        assertEquals("5", usr.getStoreIdFromAdvRole("Bard"));
+
+        assertEquals("1", usr.getStoreIdFromAdvRole("Druid"));
+
+        assertEquals("3", usr.getStoreIdFromAdvRole("Rogue"));
+
+        assertEquals("0", usr.getStoreIdFromAdvRole("Wizard"));
+        assertEquals("0", usr.getStoreIdFromAdvRole("Warlock"));
+        assertEquals("0", usr.getStoreIdFromAdvRole("Wizard"));
+
+        assertEquals("4", usr.getStoreIdFromAdvRole("Test"));
 
     }
 
     @Test
-    void login() {
+    void updateUsrRole() {
+        usr.deleteAdv("0");
+        Adventurer adv = new Adventurer();
+        adv.setId("0"); adv.setAdvName("TestName"); adv.setPassword("TestPass1@");
+        adv.setStore_id("0"); adv.setUsrRole("DEFAULT"); adv.setAdvRole("Mage");
+        usr.register(adv);
+
+        assertEquals(true, usr.updateUsrRole("ADMIN", adv.getId()));
+        assertEquals(true, usr.updateUsrRole("DEFAULT", adv.getId()));
     }
 
-    @Test
-    void register() {
-    }
 }
